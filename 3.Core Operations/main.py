@@ -4,8 +4,10 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMessageBox
 from PyQt6.QtCore import QFile
 import matplotlib
-matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
+
+
+matplotlib.use('QtAgg')
 
 
 def check_file(file_path):
