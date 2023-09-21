@@ -3,6 +3,9 @@ import cv2 as cv
 import sys
 from PyQt6.QtWidgets import QApplication, QMessageBox
 from PyQt6.QtCore import QFile
+import matplotlib
+matplotlib.use('TkAgg')
+from matplotlib import pyplot as plt
 
 
 def check_file(file_path):
@@ -34,9 +37,17 @@ if __name__ == '__main__':
     cv.imshow("0", cv.imread(img_name, 0))
     cv.imshow("-1", cv.imread(img_name, -1))
 
-    k = cv.waitKey(0)
+    # 如果使用的是64位计算机，则必须按如下所示修改行：k = cv.waitKey(0) & 0xFF
+    k = cv.waitKey(0) & 0xFF
     if k == 27:  # 等待ESC退出
         cv.destroyAllWindows()
     elif k == ord('s'):  # 等待关键字，保存和退出
         cv.imwrite('imwrite_example.png', cv.imread(img_name, 0))
         cv.destroyAllWindows()
+
+    img = cv.imread(img_name, 0)
+    print(plt.get_backend())
+    plt.imshow(img, cmap='gray', interpolation='bicubic')
+    plt.xticks([]), plt.yticks([])  # 隐藏 x 轴和 y 轴上的刻度值
+    plt.show()
+
