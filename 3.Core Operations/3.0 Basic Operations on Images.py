@@ -22,6 +22,7 @@ def show_error_message():
     msg_box.setText("文件不存在！")
     msg_box.exec()
 
+# translate this sentence
 
 if __name__ == '__main__':
     img_name = "../image/github_icon_color.jpg"
