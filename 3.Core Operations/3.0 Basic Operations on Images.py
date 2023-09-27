@@ -6,7 +6,6 @@ from PyQt6.QtCore import QFile
 import matplotlib
 from matplotlib import pyplot as plt
 
-
 matplotlib.use('QtAgg')
 
 
@@ -35,21 +34,43 @@ if __name__ == '__main__':
     # cv.IMREAD_UNCHANGED：加载图像，包括alpha通道
     # 注意 除了这三个标志，你可以分别简单地传递整数1、0或-1。
 
-    cv.imshow("1", cv.imread(img_name, 1))
-    cv.imshow("0", cv.imread(img_name, 0))
-    cv.imshow("-1", cv.imread(img_name, -1))
+    img = cv.imread(img_name)
+    px = img[100, 100]
+    print(px)
+    blue = img[100, 100, 0]
+    print(blue)
+    img[100, 100] = [255, 255, 255]
 
-    # 如果使用的是64位计算机，则必须按如下所示修改行：k = cv.waitKey(0) & 0xFF
-    k = cv.waitKey(0) & 0xFF
-    if k == 27:  # 等待ESC退出
-        cv.destroyAllWindows()
-    elif k == ord('s'):  # 等待关键字，保存和退出
-        cv.imwrite('imwrite_example.png', cv.imread(img_name, 0))
-        cv.destroyAllWindows()
+    px_red = img.item(10, 10, 2)
+    print(px_red)
+    img.itemset((10, 10, 2), 100)
+    print(img.item(10, 10, 2))
 
-    img = cv.imread(img_name, 0)
-    print(plt.get_backend())
-    plt.imshow(img, cmap='gray', interpolation='bicubic')
-    plt.xticks([]), plt.yticks([])  # 隐藏 x 轴和 y 轴上的刻度值
+    print("img.shape:", img.shape)
+    print("img.size:", img.size)
+    print("img.dtype:", img.dtype)
+
+    ball = img[280:340, 330:390]
+    img[206:266, 206:266] = ball
+    cv.imshow('img', img)
+    cv.waitKey(0)
+
+    b, g, r = cv.split(img)
+    img = cv.merge((b, g, r))
+    b = img[:, :, 0]
+    img[:, :, 2] = 0
+
+    BLUE = [255, 0, 0]
+    img1 = cv.imread('../data/opencv-logo.png')
+    replicate = cv.copyMakeBorder(img1, 10, 10, 10, 10, cv.BORDER_REPLICATE)
+    reflect = cv.copyMakeBorder(img1, 10, 10, 10, 10, cv.BORDER_REFLECT)
+    reflect101 = cv.copyMakeBorder(img1, 10, 10, 10, 10, cv.BORDER_REFLECT_101)
+    wrap = cv.copyMakeBorder(img1, 10, 10, 10, 10, cv.BORDER_WRAP)
+    constant = cv.copyMakeBorder(img1, 10, 10, 10, 10, cv.BORDER_CONSTANT, value=BLUE)
+    plt.subplot(231), plt.imshow(cv.cvtColor(img1, cv.COLOR_BGR2RGB), 'gray'), plt.title('ORIGINAL')
+    plt.subplot(232), plt.imshow(cv.cvtColor(replicate, cv.COLOR_BGR2RGB), 'gray'), plt.title('REPLICATE')
+    plt.subplot(233), plt.imshow(cv.cvtColor(reflect, cv.COLOR_BGR2RGB), 'gray'), plt.title('REFLECT')
+    plt.subplot(234), plt.imshow(cv.cvtColor(reflect101, cv.COLOR_BGR2RGB), 'gray'), plt.title('REFLECT_101')
+    plt.subplot(235), plt.imshow(cv.cvtColor(wrap, cv.COLOR_BGR2RGB), 'gray'), plt.title('WRAP')
+    plt.subplot(236), plt.imshow(cv.cvtColor(constant, cv.COLOR_BGR2RGB), 'gray'), plt.title('CONSTANT')
     plt.show()
-
