@@ -19,8 +19,10 @@ if __name__ == '__main__':
 
 
     def nothing(x):
-        pass
+        current_function_name = inspect.currentframe().f_code.co_name
 
+
+    print("current_function_name:", current_function_name)
 
     cv.namedWindow('image')
     # 创建颜色变化的轨迹栏
