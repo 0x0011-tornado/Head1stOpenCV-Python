@@ -39,10 +39,11 @@ def cumulative_distribution_function():
 
 
 def equalization():
-    img = cv.imread('../data/wiki.jpg', 0)
+    img = cv.imread('../data/wiki.png', 0)
     equ = cv.equalizeHist(img)
+    print(equ)
     res = np.hstack((img, equ))  # stacking images side-by-side
-    cv.imwrite('res.png', res)
+    cv.imshow('res', res)
 
     img = cv.imread('../data/tsukuba_l.png', 0)
     # create a CLAHE object (Arguments are optional).
@@ -58,10 +59,37 @@ def equalization():
     plt.show()
 
 
+def hist2d():
+    img = cv.imread('../data/home.jpg')
+    hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
+    hist = cv.calcHist([hsv], [0, 1], None, [180, 256], [0, 180, 0, 256])
+    plt.figure()
+    plt.subplot(121)
+    rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+    plt.imshow(rgb)
+    plt.subplot(122)
+    plt.imshow(hist, interpolation='nearest')
+    plt.show()
+
+
+def back_projection():
+    # roi是我们需要找到的对象或对象区域
+    roi = cv.imread('rose_red.png')
+    hsv = cv.cvtColor(roi, cv.COLOR_BGR2HSV)
+    # 目标是我们搜索的图像
+    target = cv.imread('rose.png')
+    hsvt = cv.cvtColor(target, cv.COLOR_BGR2HSV)
+    # 使用calcHist查找直方图。也可以使用np.histogram2d完成
+    M = cv.calcHist([hsv], [0, 1], None, [180, 256], [0, 180, 0, 256])
+    I = cv.calcHist([hsvt], [0, 1], None, [180, 256], [0, 180, 0, 256])
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     cumulative_distribution_function()
     equalization()
-    
+    hist2d()
+    # back_projection()
+
     sys.exit(app.exec())
