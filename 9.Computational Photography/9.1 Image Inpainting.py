@@ -14,6 +14,13 @@ def function():
     current_function_name = inspect.currentframe().f_code.co_name
     print("current_function_name:", current_function_name)
 
+    img = cv.imread('../data/messi_2.jpg')
+    mask = cv.imread('../data/mask2.png', 0)
+    dst = cv.inpaint(img, mask, 3, cv.INPAINT_TELEA)
+    cv.imshow('dst', dst)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
